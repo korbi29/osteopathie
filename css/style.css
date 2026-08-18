@@ -1,0 +1,838 @@
+/* ==========================================================
+   Praxis Hager — Öffentliche Website
+   Warme, lebendige Farben aus dem Logo: Pfirsich, Salbei, Cream.
+   ========================================================== */
+
+:root {
+  color-scheme: light;          /* verhindert iOS/Safari Auto-Dark-Mode-Inversion */
+
+  /* Direkt aus dem Logo gesampelt */
+  --peach:        #F8CBA1;
+  --peach-soft:   #FCE3CC;     /* abgeschwächte Variante */
+  --peach-deep:   #D89968;     /* dunkler für Text/Buttons */
+  --peach-darker: #B27D52;     /* noch dunkler für Button-Hover */
+  --sage:         #B0D2C2;
+  --sage-soft:   #D6E7DD;
+  --sage-text:    #4A7361;     /* WCAG-konform für Text auch auf cream-sage */
+
+  --cream:        #FFFAF3;     /* heller Grundton (vorher etwas grauer) */
+  --cream-2:      #FDF2E5;     /* getöntes Cream (Pfirsich-Hauch) */
+  --cream-sage:   #F0F5EF;     /* getöntes Cream (Salbei-Hauch) */
+
+  --ink:          #2B2520;
+  --ink-soft:     #6B5F52;
+  --line:         #ECDFCC;
+
+  --ff-display: "Fraunces", Georgia, serif;
+  --ff-body:    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* ---------- Skip-Link für Tastatur- und Screen-Reader-Nutzer ---------- */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  z-index: 999;
+  padding: .75rem 1.2rem;
+  background: var(--ink);
+  color: var(--cream);
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+}
+.skip-link:focus {
+  top: .75rem;
+  color: var(--cream);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  scroll-behavior: smooth;
+  /* Reserviert oben Platz für die sticky Nav, damit Anker-Sprünge
+     (#anfahrt etc.) nicht vom Header verdeckt werden. */
+  scroll-padding-top: 5rem;
+  background: var(--cream);
+}
+body {
+  margin: 0;
+  font-family: var(--ff-body);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--cream);
+  -webkit-font-smoothing: antialiased;
+  /* Dark-Mode-Inversion in iOS Safari/Chrome verhindern */
+  forced-color-adjust: none;
+}
+/* Manche Reader/Browser invertieren wenn prefers-color-scheme: dark.
+   Wir signalisieren ausdrücklich: diese Seite ist hell, nicht invertieren. */
+@media (prefers-color-scheme: dark) {
+  html, body {
+    background: var(--cream) !important;
+    color: var(--ink) !important;
+  }
+}
+img { max-width: 100%; height: auto; display: block; }
+main { background: var(--cream); display: block; }
+a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--peach);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color .2s, color .2s;
+}
+a:hover { color: var(--peach-deep); text-decoration-color: var(--peach-deep); }
+ul { padding: 0; margin: 0; list-style: none; }
+
+.wrap {
+  width: min(100% - 2.5rem, 1040px);
+  margin-inline: auto;
+}
+.wrap--narrow {
+  width: min(100% - 2.5rem, 720px);
+  margin-inline: auto;
+}
+
+/* ---------- Typography ---------- */
+h1, h2, h3 {
+  font-family: var(--ff-display);
+  font-weight: 400;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  margin: 0 0 .8rem;
+}
+h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); line-height: 1.1; }
+h2 {
+  font-size: clamp(1.7rem, 3vw, 2.1rem);
+  line-height: 1.2;
+  margin-bottom: 1.6rem;
+}
+h2::after {
+  /* kleiner farbiger Akzent unter h2 — bringt Lebendigkeit ohne Schnickschnack */
+  content: "";
+  display: block;
+  width: 48px;
+  height: 3px;
+  background: var(--peach);
+  border-radius: 2px;
+  margin-top: .8rem;
+}
+.section--alt h2::after { background: var(--sage); }
+h3 { font-size: 1.2rem; font-weight: 500; }
+p  { margin: 0 0 1rem; color: var(--ink-soft); }
+
+/* ---------- Nav ---------- */
+.nav {
+  background: rgba(255, 250, 243, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 10;
+}
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .9rem 0;
+  gap: 1.5rem;
+}
+.nav__brand {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  text-decoration: none;
+  font-family: var(--ff-display);
+  font-size: 1.05rem;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.nav__logo {
+  width: 42px; height: 42px;
+}
+.nav__links {
+  display: flex;
+  gap: 1.75rem;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.nav__links a {
+  text-decoration: none;
+  font-size: .95rem;
+  color: var(--ink-soft);
+  font-weight: 500;
+  padding: .3rem 0;
+  border-bottom: 2px solid transparent;
+  transition: color .2s, border-color .2s;
+  white-space: nowrap;
+}
+.nav__links a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--peach);
+}
+
+.nav__brand-short { display: none; }
+
+.nav.is-scrolled {
+  box-shadow: 0 2px 16px -4px rgba(43, 37, 32, .1);
+}
+
+@media (max-width: 760px) {
+  .nav__brand-full { display: none; }
+  .nav__brand-short { display: inline; }
+  .nav__links { gap: 1.2rem; }
+  .nav__links a { font-size: .88rem; }
+}
+
+/* ---------- Burger button ---------- */
+.nav__burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 36px; height: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.nav__burger span {
+  display: block;
+  width: 22px; height: 2px;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: transform .25s ease, opacity .2s ease;
+}
+.nav__burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav__burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav__burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+@media (max-width: 620px) {
+  .nav__burger { display: flex; }
+  /* Im Burger-Modus: nur Kurz-Brand zeigen, NICHT beide gleichzeitig */
+  .nav__brand-full  { display: none; }
+  .nav__brand-short { display: inline; }
+
+  .nav__links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    /* Negative Margins, weil nav__links Kind der .wrap (mit 1.25rem padding) ist:
+       so überlappt das Menü die volle Header-Breite statt nur die wrap-Breite. */
+    left:  -1.25rem;
+    right: -1.25rem;
+    z-index: 20;                       /* über Hero und Folge-Sektionen */
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: .5rem 1.25rem .75rem;
+    /* Solides Cream — backdrop-filter doppelt verschachtelt mit der .nav führt
+       in manchen Browsern zu fehlerhaftem Rendering (Inhalt scheint durch). */
+    background: var(--cream);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 8px 24px -8px rgba(43, 37, 32, .15);
+  }
+  .nav__links.is-open { display: flex; }
+  .nav__links a {
+    font-size: 1rem;
+    /* Text deutlich vom Rand absetzen, aber klickbarer Bereich bleibt
+       trotzdem groß: padding sorgt für den Einzug und für eine komfortable
+       Touch-Target-Höhe (>= 44 px). */
+    padding: .85rem 1rem;
+    border-bottom: 1px solid var(--line);
+    border-radius: 6px;
+    white-space: normal;
+    transition: background .15s;
+  }
+  .nav__links a:hover,
+  .nav__links a:focus-visible {
+    background: var(--cream-2);
+    border-bottom-color: var(--line);
+  }
+  .nav__links a:last-child { border-bottom: none; }
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-block;
+  padding: .9rem 1.8rem;
+  background: var(--ink);
+  color: var(--cream);
+  text-decoration: none;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: background .2s, transform .2s, box-shadow .2s;
+  box-shadow: 0 2px 0 var(--peach-deep);
+}
+.btn:hover {
+  background: var(--peach-deep);
+  color: var(--cream);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 0 var(--peach-darker);
+  text-decoration: none;
+}
+.btn:focus-visible {
+  outline: 3px solid var(--peach-deep);
+  outline-offset: 3px;
+}
+
+/* "Ghost"-Variante — passend für Sekundär-Aktionen wie Routenplaner-Links */
+.btn--ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  box-shadow: none;
+  padding: .8rem 1.5rem;
+  font-size: .95rem;
+}
+.btn--ghost:hover {
+  background: var(--ink);
+  color: var(--cream);
+  box-shadow: none;
+  transform: translateY(-1px);
+}
+.btn--ghost::after { display: none; }
+
+/* ---------- Sections ---------- */
+.section {
+  padding: 4.5rem 0;
+  background: var(--cream);   /* explicit, damit Dark-Mode-Heuristik nichts invertiert */
+}
+.section--alt {
+  background: var(--cream-sage);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.section--alt + .section--termin { border-top: 0; }
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  padding: 4rem 0 4.5rem;
+  background:
+    radial-gradient(ellipse 700px 500px at 85% 30%, var(--sage-soft) 0%, transparent 60%),
+    radial-gradient(ellipse 600px 400px at 15% 80%, var(--peach-soft) 0%, transparent 60%),
+    var(--cream);
+  overflow: hidden;
+}
+.hero__inner {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+.hero__logo-img {
+  width: min(320px, 100%);
+  height: auto;
+  margin-inline: auto;
+  filter: drop-shadow(0 8px 24px rgba(184, 145, 100, 0.18));
+}
+.hero__tagline {
+  font-family: var(--ff-display);
+  font-size: 1.35rem;
+  line-height: 1.45;
+  color: var(--ink);
+  max-width: 38rem;
+  margin: 1rem 0 .5rem;
+}
+.hero__role {
+  color: var(--sage-text);
+  font-weight: 500;
+  margin: 0 0 2rem;
+  font-size: .98rem;
+  letter-spacing: .02em;
+}
+
+@media (max-width: 800px) {
+  .hero__inner { grid-template-columns: 1fr; gap: 2rem; text-align: center; }
+  .hero__logo-img { width: 200px; order: -1; }
+  .hero__tagline { margin-inline: auto; }
+}
+
+/* ---------- Über mich ---------- */
+.role {
+  color: var(--sage-text);
+  font-weight: 500;
+  margin-top: -.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+/* ---------- Termin vereinbaren ---------- */
+.section--termin {
+  background:
+    radial-gradient(ellipse 600px 380px at 50% 50%, var(--peach-soft) 0%, transparent 65%),
+    var(--cream-2);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+}
+.termin {
+  max-width: 540px;
+  margin: 0 auto;
+}
+.termin h2 {
+  display: inline-block;
+}
+.termin h2::after {
+  margin-left: auto;
+  margin-right: auto;
+}
+.termin__hinweis {
+  font-family: var(--ff-display);
+  font-size: 1.2rem;
+  line-height: 1.5;
+  color: var(--ink);
+  margin: 0 0 1.8rem;
+}
+.termin__btn {
+  font-size: 1.15rem;
+  padding: 1rem 2.2rem;
+  margin-bottom: 1.8rem;
+}
+.termin__zeiten {
+  font-size: .95rem;
+  color: var(--ink-soft);
+  margin: 0;
+  line-height: 1.85;
+}
+
+/* ---------- Anfahrt ---------- */
+.section--anfahrt {
+  background: var(--cream-sage);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.section--anfahrt h2::after { background: var(--sage); }
+.section--termin + .section--anfahrt { border-top: 0; }
+
+.anfahrt__top {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+.anfahrt__adresse {
+  font-style: normal;
+  font-size: 1rem;
+  color: var(--ink);
+  line-height: 1.65;
+}
+.anfahrt__adresse strong {
+  font-family: var(--ff-display);
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+.anfahrt__routen {
+  display: flex;
+  gap: .75rem;
+  flex-wrap: wrap;
+}
+@media (max-width: 700px) {
+  .anfahrt__top { grid-template-columns: 1fr; gap: 1.2rem; }
+  .anfahrt__routen { flex-direction: column; align-items: stretch; }
+  .anfahrt__routen .btn { text-align: center; }
+}
+
+.anfahrt__karte {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--cream-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+.anfahrt__karte iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.anfahrt__karte-consent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: 1.5rem;
+  background:
+    radial-gradient(ellipse at 30% 30%, var(--sage-soft) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 70%, var(--peach-soft) 0%, transparent 60%),
+    var(--cream-2);
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  color: var(--ink);
+  text-align: center;
+  transition: background .2s, box-shadow .2s;
+}
+.anfahrt__karte-consent:hover {
+  box-shadow: inset 0 0 0 3px var(--peach);
+}
+.anfahrt__karte-consent:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 3px var(--peach-deep);
+}
+.anfahrt__karte-icon {
+  color: var(--peach-deep);
+  margin-bottom: .25rem;
+}
+.anfahrt__karte-titel {
+  font-family: var(--ff-display);
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+.anfahrt__karte-hinweis {
+  font-size: .82rem;
+  color: var(--ink-soft);
+  max-width: 30rem;
+  line-height: 1.5;
+}
+.anfahrt__karte-hinweis a {
+  color: var(--ink);
+}
+.anfahrt__karte-noscript {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 1rem;
+  color: var(--ink);
+}
+
+.anfahrt__infos {
+  display: grid;
+  /* passt sich an die Zahl der gefüllten Hinweise an — 1, 2 oder 3 Karten
+     bleiben jeweils zentriert und gleich breit */
+  grid-template-columns: repeat(auto-fit, minmax(260px, 360px));
+  justify-content: center;
+  gap: 1.25rem;
+}
+.anfahrt__info {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.4rem 1.5rem 1.6rem;
+}
+.anfahrt__info h3 {
+  margin: 0 0 .6rem;
+  font-family: var(--ff-display);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+.anfahrt__info p {
+  margin: 0;
+  font-size: .92rem;
+  line-height: 1.6;
+}
+@media (max-width: 800px) {
+  .anfahrt__infos { grid-template-columns: 1fr; }
+}
+
+/* ---------- Kontakt ---------- */
+.kontakt {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 3rem;
+  align-items: start;
+}
+.hinweis {
+  font-family: var(--ff-display);
+  font-size: 1.15rem;
+  line-height: 1.5;
+  color: var(--ink);
+  padding: 1.2rem 1.4rem;
+  background: var(--cream-2);
+  border-left: 4px solid var(--peach);
+  border-radius: 0 8px 8px 0;
+  margin: 0;
+}
+.kontakt__data {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  gap: .8rem 1.5rem;
+  margin: 0;
+  font-size: .98rem;
+}
+.kontakt__data dt {
+  font-weight: 600;
+  color: var(--sage-text);
+  padding-top: .1rem;
+  font-size: .82rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.kontakt__data dd { margin: 0; color: var(--ink); }
+.kontakt__data dd a { font-weight: 500; }
+
+@media (max-width: 720px) {
+  .kontakt { grid-template-columns: 1fr; gap: 2rem; }
+  .kontakt__data { grid-template-columns: 1fr; gap: .1rem 0; }
+  .kontakt__data dt { margin-top: .8rem; }
+}
+
+/* ---------- Legal pages ---------- */
+.section--legal { padding-top: 5rem; }
+.section--legal h1 { margin-bottom: 2rem; }
+.section--legal h1::after {
+  /* gleicher Akzent wie bei h2 */
+  content: "";
+  display: block;
+  width: 48px;
+  height: 3px;
+  background: var(--peach);
+  border-radius: 2px;
+  margin-top: 1rem;
+}
+.section--legal h2 {
+  font-size: 1.15rem;
+  margin: 2rem 0 .5rem;
+  color: var(--ink);
+}
+.section--legal h2::after { display: none; }
+.section--legal h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 1.4rem 0 .3rem;
+  color: var(--ink);
+  font-family: var(--ff-body);
+}
+.section--legal p { font-size: .96rem; }
+.section--legal ul {
+  margin: .5rem 0 1rem;
+  padding-left: 1.2rem;
+  list-style: disc;
+  font-size: .96rem;
+  color: var(--ink-soft);
+}
+.section--legal ul li { padding: .15rem 0; }
+.section--legal .legal-meta {
+  font-size: .82rem;
+  color: var(--ink-soft);
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+.back { margin-top: 2.5rem; }
+.back a { font-weight: 500; }
+
+/* ---------- Fehlerseiten (404/413/500) ---------- */
+.error-code {
+  font-family: var(--ff-body);
+  font-size: .82rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--peach-deep);
+  margin: 0 0 .5rem;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 3rem 0 2rem;
+  position: relative;
+}
+.footer::before {
+  /* warme Farbleiste oben — verbindet Footer optisch mit dem Logo */
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg,
+    var(--peach) 0%,
+    var(--peach-soft) 35%,
+    var(--sage-soft) 65%,
+    var(--sage) 100%);
+}
+.footer__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap;
+  font-size: .9rem;
+}
+.footer p { margin: 0 0 .3rem; color: rgba(255, 250, 243, .75); }
+.footer__name {
+  font-family: var(--ff-display);
+  font-size: 1.05rem;
+  color: var(--cream) !important;
+  margin-bottom: .5rem !important;
+}
+.footer a {
+  color: rgba(255, 250, 243, .85);
+  text-decoration-color: rgba(248, 203, 161, .5);
+}
+.footer a:hover { color: var(--peach); text-decoration-color: var(--peach); }
+.footer__legal { display: flex; gap: 1.5rem; }
+
+/* ---------- Wartungsseite ---------- */
+.wartung-body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background:
+    radial-gradient(ellipse 600px 400px at 30% 30%, var(--peach-soft) 0%, transparent 60%),
+    radial-gradient(ellipse 600px 400px at 70% 70%, var(--sage-soft) 0%, transparent 60%),
+    var(--cream);
+}
+.wartung {
+  text-align: center;
+  max-width: 460px;
+}
+.wartung__logo {
+  width: 110px; height: 110px;
+  margin: 0 auto 1.5rem;
+  filter: drop-shadow(0 8px 16px rgba(184, 145, 100, 0.15));
+}
+.wartung__brand {
+  font-family: var(--ff-display);
+  font-size: 1rem;
+  color: var(--ink-soft);
+  margin: 0 0 1.5rem;
+}
+.wartung h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+.wartung h1::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 3px;
+  background: var(--peach);
+  border-radius: 2px;
+  margin: 1rem auto 0;
+}
+.wartung__msg {
+  margin: 0 0 2rem;
+  color: var(--ink-soft);
+}
+
+/* ==========================================================
+   ANIMATIONEN — dezent, respektieren prefers-reduced-motion
+   ========================================================== */
+
+/* 1. Logo-Float im Hero (subtil, beruhigend) */
+@keyframes logo-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+.hero__logo-img {
+  animation: logo-float 6s ease-in-out infinite;
+}
+
+/* 2. Hero-Text sanft einblenden (nur beim ersten Laden) */
+@keyframes hero-fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero h1            { animation: hero-fade-in .8s ease-out both; }
+.hero__tagline      { animation: hero-fade-in .8s ease-out .1s both; }
+.hero__role         { animation: hero-fade-in .8s ease-out .2s both; }
+.hero .btn          { animation: hero-fade-in .8s ease-out .3s both; }
+.hero__logo-img     { animation: hero-fade-in .9s ease-out .15s both, logo-float 6s ease-in-out 1s infinite; }
+
+/* 3. Reveal-on-scroll für tiefere Sektionen */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity .7s ease-out, transform .7s ease-out;
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+[data-reveal-delay="1"].is-visible { transition-delay: .08s; }
+[data-reveal-delay="2"].is-visible { transition-delay: .16s; }
+[data-reveal-delay="3"].is-visible { transition-delay: .24s; }
+
+/* 4. Akzent-Strich unter h2 wächst beim Sichtbar-werden */
+@keyframes accent-grow {
+  from { width: 0; }
+  to   { width: 48px; }
+}
+.is-visible > h2::after,
+h2.is-visible::after {
+  animation: accent-grow .6s ease-out .2s both;
+}
+
+/* 5. Button: leichte Glow beim Hover */
+.btn { position: relative; overflow: hidden; }
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(248,203,161,.4), transparent 70%);
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.btn:hover::after { opacity: 1; }
+
+/* 6. Nav-Brand: Logo dreht sich ganz minimal beim Hover */
+.nav__brand .nav__logo {
+  transition: transform .5s cubic-bezier(.4,.2,.2,1);
+}
+.nav__brand:hover .nav__logo {
+  transform: rotate(-8deg) scale(1.05);
+}
+
+/* Reduced motion: ALLE Animationen deaktivieren */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-reveal] { opacity: 1; transform: none; }
+}
+
+/* ==========================================================
+   PRINT — Telefon, Adresse, Sprechzeiten gut sichtbar; Nav & Animationen weg
+   ========================================================== */
+@media print {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  html, body { background: #fff !important; color: #000 !important; }
+  .nav, .footer__legal, .anfahrt__karte, .anfahrt__routen,
+  .nav__burger, .skip-link { display: none !important; }
+  a { color: #000 !important; text-decoration: none; }
+  a[href^="tel:"]::after,
+  a[href^="mailto:"]::after { content: ""; }
+  .hero { padding: 1rem 0; background: #fff !important; }
+  .hero__inner { grid-template-columns: 1fr; text-align: left; }
+  .hero__logo-img { display: none; }
+  .section { padding: 1.5rem 0; background: #fff !important; }
+  .section--alt, .section--termin, .section--anfahrt {
+    background: #fff !important;
+    border: 0 !important;
+  }
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
+  .footer {
+    background: #fff !important;
+    color: #000 !important;
+    border-top: 1px solid #999;
+    padding: 1rem 0;
+  }
+  .footer p, .footer__name { color: #000 !important; }
+  /* Seitenumbrüche vermeiden mitten in Sektionen */
+  section, .anfahrt__info, .kontakt {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
