@@ -220,10 +220,10 @@ p  { margin: 0 0 1rem; color: var(--ink-soft); }
     display: none;
     position: absolute;
     top: 100%;
-    /* Negative Margins, weil nav__links Kind der .wrap (mit 1.25rem padding) ist:
-       so überlappt das Menü die volle Header-Breite statt nur die wrap-Breite. */
-    left:  -1.25rem;
-    right: -1.25rem;
+    /* Bezugspunkt ist die sticky .nav, nicht die .wrap — 0 deckt exakt die
+       volle Header-Breite ab. (Negative Werte erzeugten horizontales Scrollen.) */
+    left:  0;
+    right: 0;
     z-index: 20;                       /* über Hero und Folge-Sektionen */
     flex-direction: column;
     align-items: stretch;
@@ -447,7 +447,7 @@ p  { margin: 0 0 1rem; color: var(--ink-soft); }
   border: 1px solid var(--line);
   border-radius: 12px;
   overflow: hidden;
-  margin-bottom: 2rem;
+  margin-bottom: .75rem;
 }
 .anfahrt__karte iframe {
   display: block;
@@ -500,6 +500,11 @@ p  { margin: 0 0 1rem; color: var(--ink-soft); }
 .anfahrt__karte-hinweis a {
   color: var(--ink);
 }
+.anfahrt__karte-datenschutz {
+  font-size: .82rem;
+  color: var(--ink-soft);
+  margin: 0 0 2rem;
+}
 .anfahrt__karte-noscript {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
@@ -538,28 +543,12 @@ p  { margin: 0 0 1rem; color: var(--ink-soft); }
 }
 
 /* ---------- Kontakt ---------- */
-.kontakt {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 3rem;
-  align-items: start;
-}
-.hinweis {
-  font-family: var(--ff-display);
-  font-size: 1.15rem;
-  line-height: 1.5;
-  color: var(--ink);
-  padding: 1.2rem 1.4rem;
-  background: var(--cream-2);
-  border-left: 4px solid var(--peach);
-  border-radius: 0 8px 8px 0;
-  margin: 0;
-}
 .kontakt__data {
   display: grid;
-  grid-template-columns: 8rem 1fr;
-  gap: .8rem 1.5rem;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: .9rem 1.5rem;
   margin: 0;
+  max-width: 34rem;
   font-size: .98rem;
 }
 .kontakt__data dt {
@@ -574,7 +563,6 @@ p  { margin: 0 0 1rem; color: var(--ink-soft); }
 .kontakt__data dd a { font-weight: 500; }
 
 @media (max-width: 720px) {
-  .kontakt { grid-template-columns: 1fr; gap: 2rem; }
   .kontakt__data { grid-template-columns: 1fr; gap: .1rem 0; }
   .kontakt__data dt { margin-top: .8rem; }
 }
@@ -730,9 +718,8 @@ p  { margin: 0 0 1rem; color: var(--ink-soft); }
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-10px); }
 }
-.hero__logo-img {
-  animation: logo-float 6s ease-in-out infinite;
-}
+/* (Die konkrete animation-Deklaration steht unten bei den Hero-Einblendungen,
+   damit Float und Fade-in in einer Regel zusammenlaufen.) */
 
 /* 2. Hero-Text sanft einblenden (nur beim ersten Laden) */
 @keyframes hero-fade-in {
@@ -781,6 +768,27 @@ h2.is-visible::after {
 }
 .btn:hover::after { opacity: 1; }
 
+/* 5b. Buttons mit Reveal-Effekt: Einblenden per Animation statt Transition.
+   Sonst überschreibt die [data-reveal]-Transition (.7s + Delay) die
+   Hover-Transition des Buttons — Hintergrund/Schatten springen dann hart um. */
+@keyframes btn-reveal-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.btn[data-reveal] {
+  transition: background .2s, transform .2s, box-shadow .2s;
+}
+.btn[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0s;
+  animation: btn-reveal-up .7s ease-out backwards;
+}
+.btn[data-reveal].is-visible:hover { transform: translateY(-1px); }
+.btn[data-reveal-delay="1"].is-visible { animation-delay: .08s; }
+.btn[data-reveal-delay="2"].is-visible { animation-delay: .16s; }
+.btn[data-reveal-delay="3"].is-visible { animation-delay: .24s; }
+
 /* 6. Nav-Brand: Logo dreht sich ganz minimal beim Hover */
 .nav__brand .nav__logo {
   transition: transform .5s cubic-bezier(.4,.2,.2,1);
@@ -809,8 +817,8 @@ h2.is-visible::after {
     transition: none !important;
   }
   html, body { background: #fff !important; color: #000 !important; }
-  .nav, .footer__legal, .anfahrt__karte, .anfahrt__routen,
-  .nav__burger, .skip-link { display: none !important; }
+  .nav, .footer__legal, .anfahrt__karte, .anfahrt__karte-datenschutz,
+  .anfahrt__routen, .nav__burger, .skip-link { display: none !important; }
   a { color: #000 !important; text-decoration: none; }
   a[href^="tel:"]::after,
   a[href^="mailto:"]::after { content: ""; }
@@ -831,7 +839,7 @@ h2.is-visible::after {
   }
   .footer p, .footer__name { color: #000 !important; }
   /* Seitenumbrüche vermeiden mitten in Sektionen */
-  section, .anfahrt__info, .kontakt {
+  section, .anfahrt__info, .kontakt__data {
     break-inside: avoid;
     page-break-inside: avoid;
   }

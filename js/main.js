@@ -61,6 +61,10 @@
         "&marker=" + encodeURIComponent(marker);
       wrap.innerHTML = "";
       wrap.appendChild(iframe);
+      // Der geklickte Button verschwindet — Fokus sonst zurück auf <body>.
+      // preventScroll, damit die Seite nicht springt.
+      wrap.tabIndex = -1;
+      wrap.focus({ preventScroll: true });
     });
   });
 })();
